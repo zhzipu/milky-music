@@ -21,6 +21,7 @@
 ## 内容导航
 
 - [功能总览](#功能总览)
+- [界面截图](#界面截图)
 - [音源与播放](#音源与播放)
 - [听歌识曲](#听歌识曲)
 - [歌词匹配与校准](#歌词匹配与校准)
@@ -43,6 +44,28 @@
 | 手表同步 | 通过同一 Wi-Fi 向 LXXWear 传输已选曲目 | 在手表端播放手机歌单中的选曲 |
 | 桌面控制 | 悬浮歌词和 4×1 音乐小组件 | 查看当前歌词、播放进度和播放控制 |
 | 大屏布局 | 横屏、平板和折叠屏专用布局 | 在宽屏设备上浏览和播放音乐 |
+
+## 界面截图
+
+以下为手机竖屏和横屏界面的实际截图。图片按等比缩小展示，未裁剪；点击图片可查看原始尺寸。
+
+<table>
+  <tr>
+    <td align="center"><a href="./doc/images/screenshots/01-recent-and-playlists.jpg"><img src="./doc/images/screenshots/01-recent-and-playlists.jpg" width="210" alt="最近播放与歌单首页"></a><br>最近播放与歌单首页</td>
+    <td align="center"><a href="./doc/images/screenshots/02-search.jpg"><img src="./doc/images/screenshots/02-search.jpg" width="210" alt="搜索与推荐内容"></a><br>搜索与推荐内容</td>
+    <td align="center"><a href="./doc/images/screenshots/03-hot.jpg"><img src="./doc/images/screenshots/03-hot.jpg" width="210" alt="热门榜单与推荐"></a><br>热门榜单与推荐</td>
+  </tr>
+  <tr>
+    <td align="center"><a href="./doc/images/screenshots/04-settings.jpg"><img src="./doc/images/screenshots/04-settings.jpg" width="210" alt="分类设置页面"></a><br>分类设置页面</td>
+    <td align="center"><a href="./doc/images/screenshots/05-playlist-detail.jpg"><img src="./doc/images/screenshots/05-playlist-detail.jpg" width="210" alt="歌单详情与曲目列表"></a><br>歌单详情与曲目列表</td>
+    <td align="center"><a href="./doc/images/screenshots/06-player-portrait.jpg"><img src="./doc/images/screenshots/06-player-portrait.jpg" width="210" alt="竖屏播放页"></a><br>竖屏播放页</td>
+  </tr>
+  <tr>
+    <td align="center"><a href="./doc/images/screenshots/07-lyrics-portrait.jpg"><img src="./doc/images/screenshots/07-lyrics-portrait.jpg" width="210" alt="竖屏歌词页"></a><br>竖屏歌词页</td>
+    <td align="center"><a href="./doc/images/screenshots/08-home-landscape.jpg"><img src="./doc/images/screenshots/08-home-landscape.jpg" width="210" alt="横屏首页与播放面板"></a><br>横屏首页与播放面板</td>
+    <td align="center"><a href="./doc/images/screenshots/09-lyrics-landscape.jpg"><img src="./doc/images/screenshots/09-lyrics-landscape.jpg" width="210" alt="横屏歌词与播放面板"></a><br>横屏歌词与播放面板</td>
+  </tr>
+</table>
 
 ## 音源与播放
 
