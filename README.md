@@ -10,8 +10,7 @@
 
 <p align="center">基于 React Native 的音乐客户端</p>
 
-本项目在 [lx-music-mobile](https://github.com/lyswhut/lx-music-mobile) 与
-[ikun-music-mobile](https://github.com/ikunshare/ikun-music-mobile) 的基础上继续改造，
+本项目在 [lx-music-mobile](https://github.com/lyswhut/lx-music-mobile) 的基础上继续改造，
 以满足个人使用需求。感谢上游作者的开源工作。
 
 > 同步、备份等功能未充分测试，请自行备份重要数据。
