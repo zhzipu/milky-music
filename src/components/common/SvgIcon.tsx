@@ -1,0 +1,295 @@
+import { memo } from 'react'
+import Svg, { Path, Rect, Line, Circle } from 'react-native-svg'
+import { scaleSizeW } from '@/utils/pixelRatio'
+
+interface SvgIconProps {
+  name: string
+  size?: number
+  rawSize?: number
+  color?: string
+}
+
+/**
+ * 日历图标 - 用于每日推荐
+ * 参考网易云音乐每日推荐的日历样式
+ */
+const CalendarIcon = ({ size, color }: { size: number; color: string }) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+    {/* 日历主体 */}
+    <Rect x="2" y="3" width="20" height="19" rx="2" ry="2" stroke={color} strokeWidth="1.6" fill="none" />
+    {/* 顶部横线（日历头部） */}
+    <Line x1="2" y1="8" x2="22" y2="8" stroke={color} strokeWidth="1.6" />
+    {/* 左侧挂钩 */}
+    <Line x1="7" y1="1" x2="7" y2="5" stroke={color} strokeWidth="1.6" strokeLinecap="round" />
+    {/* 右侧挂钩 */}
+    <Line x1="17" y1="1" x2="17" y2="5" stroke={color} strokeWidth="1.6" strokeLinecap="round" />
+    {/* 日期点 - 2x3 布局 */}
+    <Circle cx="7" cy="12.5" r="1.2" fill={color} />
+    <Circle cx="12" cy="12.5" r="1.2" fill={color} />
+    <Circle cx="17" cy="12.5" r="1.2" fill={color} />
+    <Circle cx="7" cy="17" r="1.2" fill={color} />
+    <Circle cx="12" cy="17" r="1.2" fill={color} />
+    <Circle cx="17" cy="17" r="1.2" fill={color} />
+  </Svg>
+)
+
+/**
+ * 用户图标 - 用于关注的歌手
+ * 简洁的用户轮廓图标
+ */
+const ArtistIcon = ({ size, color }: { size: number; color: string }) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+    {/* 头部 */}
+    <Circle cx="12" cy="8.5" r="4.5" stroke={color} strokeWidth="1.6" fill="none" />
+    {/* 身体 */}
+    <Path
+      d="M3.5 22c0-4.694 3.806-8.5 8.5-8.5s8.5 3.806 8.5 8.5"
+      stroke={color}
+      strokeWidth="1.6"
+      strokeLinecap="round"
+      fill="none"
+    />
+  </Svg>
+)
+
+/**
+ * 专辑/唱片图标 - 用于收藏的专辑
+ * 参考网易云音乐收藏专辑的黑胶唱片样式
+ */
+const AlbumDiscIcon = ({ size, color }: { size: number; color: string }) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+    {/* 外圈 */}
+    <Circle cx="12" cy="12" r="11" stroke={color} strokeWidth="1.6" fill="none" />
+    {/* 内圈（唱片中心孔） */}
+    <Circle cx="12" cy="12" r="3" stroke={color} strokeWidth="1.6" fill="none" />
+    {/* 中心点 */}
+    <Circle cx="12" cy="12" r="1" fill={color} />
+  </Svg>
+)
+
+const OneDriveIcon = ({ size, color }: { size: number; color: string }) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+    <Path
+      d="M6.6 19.35h11.2c2.62 0 4.7-2.04 4.7-4.62 0-2.24-1.6-4.11-3.72-4.52-.65-2.98-3.09-5.21-5.97-5.21-2.4 0-4.58 1.55-5.58 3.96a5.26 5.26 0 0 0-1.55-.24C3.05 8.72.9 11 .9 13.79c0 3.11 2.33 5.56 5.7 5.56z"
+      stroke={color}
+      strokeWidth="1.6"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      fill="none"
+    />
+  </Svg>
+)
+
+/**
+ * Bilibili 图标 - 用于 B 站音频
+ * 电视机主体 + 天线 + 双眼
+ */
+const BilibiliIcon = ({ size, color }: { size: number; color: string }) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+    {/* 左天线 */}
+    <Path d="M7.2 7.2 L4.4 3.6" stroke={color} strokeWidth="1.6" strokeLinecap="round" />
+    {/* 右天线 */}
+    <Path d="M16.8 7.2 L19.6 3.6" stroke={color} strokeWidth="1.6" strokeLinecap="round" />
+    {/* 电视机主体 */}
+    <Rect x="2.4" y="7.2" width="19.2" height="12" rx="3" stroke={color} strokeWidth="1.6" fill="none" />
+    {/* 双眼 */}
+    <Line x1="9.2" y1="11.4" x2="9.2" y2="14.4" stroke={color} strokeWidth="2" strokeLinecap="round" />
+    <Line x1="14.8" y1="11.4" x2="14.8" y2="14.4" stroke={color} strokeWidth="2" strokeLinecap="round" />
+  </Svg>
+)
+
+/**
+ * 二维码图标 - 用于扫码登录
+ * 三个定位角 + 右下角数据块
+ */
+const QrCodeIcon = ({ size, color }: { size: number; color: string }) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+    {/* 左上定位角 */}
+    <Rect x="2.6" y="2.6" width="7.4" height="7.4" rx="2" stroke={color} strokeWidth="1.6" />
+    <Rect x="5.6" y="5.6" width="1.4" height="1.4" rx="0.7" fill={color} />
+    {/* 右上定位角 */}
+    <Rect x="14" y="2.6" width="7.4" height="7.4" rx="2" stroke={color} strokeWidth="1.6" />
+    <Rect x="17" y="5.6" width="1.4" height="1.4" rx="0.7" fill={color} />
+    {/* 左下定位角 */}
+    <Rect x="2.6" y="14" width="7.4" height="7.4" rx="2" stroke={color} strokeWidth="1.6" />
+    <Rect x="5.6" y="17" width="1.4" height="1.4" rx="0.7" fill={color} />
+    {/* 右下数据块 */}
+    <Rect x="14" y="14" width="3" height="3" rx="0.8" fill={color} />
+    <Rect x="18.4" y="14" width="3" height="3" rx="0.8" fill={color} />
+    <Rect x="14" y="18.4" width="3" height="3" rx="0.8" fill={color} />
+    <Rect x="18.4" y="18.4" width="3" height="3" rx="0.8" fill={color} />
+  </Svg>
+)
+
+/**
+ * 手机图标 - 用于手机号登录
+ */
+const PhoneIcon = ({ size, color }: { size: number; color: string }) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+    <Rect x="6.2" y="2.4" width="11.6" height="19.2" rx="2.6" stroke={color} strokeWidth="1.6" />
+    <Line x1="10.4" y1="18.6" x2="13.6" y2="18.6" stroke={color} strokeWidth="1.6" strokeLinecap="round" />
+  </Svg>
+)
+
+/**
+ * Cookie 图标 - 用于手动填写 Cookie
+ */
+const CookieIcon = ({ size, color }: { size: number; color: string }) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+    <Circle cx="12" cy="12" r="9.2" stroke={color} strokeWidth="1.6" />
+    <Circle cx="9" cy="9.4" r="1.3" fill={color} />
+    <Circle cx="14.6" cy="8.6" r="1" fill={color} />
+    <Circle cx="9.6" cy="14.4" r="1" fill={color} />
+    <Circle cx="15" cy="14.8" r="1.4" fill={color} />
+    <Circle cx="12.4" cy="17.4" r="0.9" fill={color} />
+  </Svg>
+)
+
+const HeartbeatIcon = ({ size, color }: { size: number; color: string }) => (
+  <Svg width={size} height={size} viewBox="0 0 1165 1024" fill="none">
+    <Path
+      d="M582.103 1023.979c-0.017 0-0.037 0-0.057 0-9.91 0-19.135-2.929-26.858-7.969l0.189 0.116-0.366-0.236c-37.014-20.47-322.334-182.265-474.13-387.408-50.491-68.21-80.819-154.003-80.819-246.879 0-19.704 1.365-39.089 4.006-58.067l-0.25 2.192c14.344-104.705 67.037-196.32 148.366-258.045 92.559-70.283 201.609-86.225 315.345-45.86 43.791 16.083 81.683 36.31 116.21 60.947l-1.48-1.003c33.048-23.634 70.939-43.86 111.372-58.853l3.359-1.091c113.788-40.337 222.838-24.422 315.37 45.86 81.33 61.829 134.022 153.471 148.366 258.045 2.401 16.818 3.771 36.242 3.771 55.986 0 92.851-30.314 178.622-81.584 247.955l0.802-1.136c-152.712 206.19-440.415 368.797-474.783 387.643-7.598 4.895-16.869 7.819-26.821 7.853h-0.009zM347.59 105.694c-43.425 0-89.994 12.46-135.593 47.117-59.054 44.892-97.349 111.588-107.794 187.813-1.757 12.365-2.76 26.646-2.76 41.16 0 68.639 22.431 132.040 60.363 183.271l-0.591-0.835c123.421 166.664 348.143 304.769 421.071 347.018 73.005-42.169 297.65-180.354 421.071-347.018 37.342-50.393 59.773-113.792 59.773-182.429 0-14.517-1.004-28.801-2.945-42.783l0.184 1.616c-10.471-76.199-48.74-142.895-107.82-187.813-159.125-120.933-330.108 28.27-337.384 34.684-8.691 7.859-20.268 12.668-32.969 12.668s-24.278-4.809-33.012-12.706l0.043 0.038c-5.052-4.555-93.553-81.801-201.634-81.801z"
+      fill={color}
+      stroke={color}
+    />
+    <Path
+      d="M380 430 L 480 300 L 680 530 L 780 400"
+      stroke={color}
+      strokeWidth="70"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </Svg>
+)
+
+/**
+ * 麦克风图标 - 用于听歌识曲
+ * 话筒 + 底座 + 双侧声波
+ */
+const RecognizeIcon = ({ size, color }: { size: number; color: string }) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+    {/* 话筒头 */}
+    <Rect x="9" y="2.6" width="6" height="10.6" rx="3" stroke={color} strokeWidth="1.6" fill="none" />
+    {/* 拾音弧 */}
+    <Path
+      d="M5.6 11.2v1.4a6.4 6.4 0 0 0 12.8 0v-1.4"
+      stroke={color}
+      strokeWidth="1.6"
+      strokeLinecap="round"
+      fill="none"
+    />
+    {/* 支架 */}
+    <Line x1="12" y1="19.2" x2="12" y2="21.6" stroke={color} strokeWidth="1.6" strokeLinecap="round" />
+    <Line x1="8.8" y1="21.6" x2="15.2" y2="21.6" stroke={color} strokeWidth="1.6" strokeLinecap="round" />
+  </Svg>
+)
+
+/**
+ * 手表图标 - 用于 LXXWear 手表同步
+ * 表盘 + 上下表带 + 侧边表冠
+ */
+const WatchIcon = ({ size, color }: { size: number; color: string }) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+    {/* 表带 */}
+    <Rect x="9.4" y="1.8" width="5.2" height="3.4" rx="1.2" stroke={color} strokeWidth="1.4" fill="none" />
+    <Rect x="9.4" y="18.8" width="5.2" height="3.4" rx="1.2" stroke={color} strokeWidth="1.4" fill="none" />
+    {/* 表盘 */}
+    <Rect x="5.6" y="5.2" width="12.8" height="13.6" rx="3.4" stroke={color} strokeWidth="1.6" fill="none" />
+    {/* 表冠 */}
+    <Line x1="18.6" y1="10.6" x2="18.6" y2="13.4" stroke={color} strokeWidth="1.6" strokeLinecap="round" />
+  </Svg>
+)
+
+/**
+ * 对勾 - 用于「确定」
+ */
+const CheckIcon = ({ size, color }: { size: number; color: string }) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+    <Path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill={color} />
+  </Svg>
+)
+
+/**
+ * 叉号 - 用于「取消」
+ */
+const CrossIcon = ({ size, color }: { size: number; color: string }) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+    <Path
+      d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+      fill={color}
+    />
+  </Svg>
+)
+
+/**
+ * 圆圈箭头（刷新）- 用于「重置」
+ */
+const RefreshIcon = ({ size, color }: { size: number; color: string }) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+    <Path
+      d="M17.65 6.35A7.96 7.96 0 0 0 12 4c-4.42 0-7.99 3.58-8 8s3.58 8 8 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0 1 12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4z"
+      fill={color}
+    />
+  </Svg>
+)
+
+/**
+ * 加号 - 用于「歌词倍速 +」
+ */
+const PlusIcon = ({ size, color }: { size: number; color: string }) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+    <Path d="M11 4h2v7h7v2h-7v7h-2v-7H4v-2h7z" fill={color} />
+  </Svg>
+)
+
+/**
+ * 减号 - 用于「歌词倍速 -」
+ */
+const MinusIcon = ({ size, color }: { size: number; color: string }) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+    <Path d="M4 11h16v2H4z" fill={color} />
+  </Svg>
+)
+
+export const SvgIcon = memo(({ name, size = 15, rawSize, color = '#000' }: SvgIconProps) => {
+  const finalSize = rawSize ?? scaleSizeW(size)
+
+  switch (name) {
+    case 'check':
+      return <CheckIcon size={finalSize} color={color} />
+    case 'plus':
+      return <PlusIcon size={finalSize} color={color} />
+    case 'minus':
+      return <MinusIcon size={finalSize} color={color} />
+    case 'cross':
+      return <CrossIcon size={finalSize} color={color} />
+    case 'refresh':
+      return <RefreshIcon size={finalSize} color={color} />
+    case 'watch':
+      return <WatchIcon size={finalSize} color={color} />
+    case 'calendar':
+      return <CalendarIcon size={finalSize} color={color} />
+    case 'artist':
+      return <ArtistIcon size={finalSize} color={color} />
+    case 'album-disc':
+      return <AlbumDiscIcon size={finalSize} color={color} />
+    case 'onedrive':
+      return <OneDriveIcon size={finalSize} color={color} />
+    case 'bilibili':
+      return <BilibiliIcon size={finalSize} color={color} />
+    case 'qrcode':
+      return <QrCodeIcon size={finalSize} color={color} />
+    case 'phone':
+      return <PhoneIcon size={finalSize} color={color} />
+    case 'cookie':
+      return <CookieIcon size={finalSize} color={color} />
+    case 'heartbeat':
+      return <HeartbeatIcon size={finalSize} color={color} />
+    case 'recognize':
+      return <RecognizeIcon size={finalSize} color={color} />
+    default:
+      return null
+  }
+})
+
+export {}

@@ -1,0 +1,298 @@
+import { memo, useRef } from 'react'
+import { View, TouchableOpacity } from 'react-native'
+import Text from '@/components/common/Text'
+import Badge, { type BadgeType } from '@/components/common/Badge'
+import { Icon } from '@/components/common/Icon'
+import { useI18n } from '@/lang'
+import { useTheme } from '@/store/theme/hook'
+import { scaleSizeH } from '@/utils/pixelRatio'
+import { LIST_ITEM_HEIGHT } from '@/config/constant'
+import { createStyle, type RowInfo } from '@/utils/tools'
+import Image from '@/components/common/Image'
+import PlayingIcon from '@/components/common/PlayingIcon'
+import { useIsBiliLiked, useIsWyLiked } from '@/store/user/hook'
+import { handleLikeMusic } from './listAction'
+import { toggleBiliSongFavorite } from '@/core/bilibili/favorite'
+import { getSP } from '@/theme/spotify/tokens'
+
+export const ITEM_HEIGHT = scaleSizeH(LIST_ITEM_HEIGHT)
+
+const useQualityTag = (musicInfo: LX.Music.MusicInfoOnline) => {
+  const t = useI18n()
+  let info: { type: BadgeType | null; text: string } = { type: null, text: '' }
+  const qualitys = (musicInfo.meta as LX.Music.MusicInfoMeta_online)._qualitys ?? {}
+  // if (musicInfo.meta._qualitys.master) {
+  //   info.type = 'secondary'
+  //   info.text = t('quality_lossless_master')
+  // } else if (musicInfo.meta._qualitys.atmos_plus) {
+  //   info.type = 'secondary'
+  //   info.text = t('quality_lossless_atmos_plus')
+  // } else if (musicInfo.meta._qualitys.atmos) {
+  //   info.type = 'secondary'
+  //   info.text = t('quality_lossless_atmos')
+  // } else
+  if (qualitys.hires) {
+    info.type = 'secondary'
+    info.text = t('quality_lossless_24bit')
+  } else if (qualitys.flac) {
+    // info.type = 'secondary'
+    info.type = 'sq'
+    info.text = t('quality_lossless')
+  } else if (qualitys['320k']) {
+    info.type = 'hq'
+    info.text = t('quality_high_quality')
+  }
+
+  return info
+}
+
+export default memo(
+  ({
+    item,
+    index,
+    showSource,
+    onPress,
+    onLongPress,
+    onShowMenu,
+    selectedList,
+    rowInfo,
+    isShowAlbumName,
+    playingId,
+    isShowInterval,
+    listId,
+    showCover = true,
+    hideMenu = false,
+  }: {
+    item: LX.Music.MusicInfoOnline
+    index: number
+    showSource?: boolean
+    onPress: (item: LX.Music.MusicInfoOnline, index: number) => void
+    onLongPress: (item: LX.Music.MusicInfoOnline, index: number) => void
+    onShowMenu: (
+      item: LX.Music.MusicInfoOnline,
+      index: number,
+      position: { x: number; y: number; w: number; h: number }
+    ) => void
+    selectedList: LX.Music.MusicInfoOnline[]
+    rowInfo: RowInfo
+    isShowAlbumName: boolean
+    isShowInterval: boolean
+    playingId?: string | null;
+    listId?: string
+    showCover?: boolean
+    hideMenu?: boolean
+  }) => {
+    const theme = useTheme()
+    const sp = getSP(theme.isDark)
+    const isPlaying = playingId === item.id;
+    const isSelected = selectedList.includes(item)
+    // 网易云「喜欢」与 bili 本地收藏是两套存储，按音源二选一
+    const isWyLiked = useIsWyLiked(item.meta.songId)
+    const isBiliLiked = useIsBiliLiked(item.source === 'bili' ? item.meta.songId : undefined)
+    const isLiked = item.source === 'bili' ? isBiliLiked : isWyLiked
+    // spoti.pw 的行不铺卡片底：选中/播放用白色低透明度填充表达，其它透明
+    const selectedBackground = sp.colors.interactivePressed
+
+    const moreButtonRef = useRef<TouchableOpacity>(null)
+    const handleShowMenu = () => {
+      if (moreButtonRef.current?.measure) {
+        moreButtonRef.current.measure((fx, fy, width, height, px, py) => {
+          onShowMenu(item, index, {
+            x: Math.ceil(px),
+            y: Math.ceil(py),
+            w: Math.ceil(width),
+            h: Math.ceil(height),
+          })
+        })
+      }
+    }
+
+    // bili 的歌曲（视频）同样可收藏：本地记录 + 同步进 B 站「音乐」收藏夹
+    const showLikeButton = item.source === 'wy' || item.source === 'bili'
+
+    const handleLike = () => {
+      if (item.source === 'bili') {
+        void toggleBiliSongFavorite(item, !isBiliLiked)
+        return
+      }
+      handleLikeMusic(item)
+    }
+
+    const tagInfo = useQualityTag(item)
+    const historySource = (item as LX.Music.MusicInfoOnline & { playHistorySource?: LX.Player.PlayHistorySource }).playHistorySource
+    const singer = `${item.singer}${isShowAlbumName && item.meta.albumName ? `·${item.meta.albumName}` : ''}`
+
+    return (
+      <View
+        style={{
+          ...styles.listItem,
+          width: rowInfo.rowWidth,
+          height: ITEM_HEIGHT,
+          backgroundColor: isSelected
+            ? selectedBackground
+            : isPlaying
+              ? sp.colors.interactive
+              : 'rgba(0,0,0,0)',
+        }}
+      >
+        <TouchableOpacity
+          style={styles.listItemLeft}
+          onPress={() => onPress(item, index)}
+          delayLongPress={300}
+          onLongPress={() => onLongPress(item, index)}
+        >
+
+
+          <View style={showCover ? styles.sn : styles.snIndex}>
+            {showCover ? (
+              <Image url={item.meta.picUrl} style={styles.albumArt} />
+            ) : isPlaying ? (
+              <PlayingIcon color={sp.colors.text} />
+            ) : (
+              <Text color={sp.colors.textSecondary} size={12}>
+                {index + 1}
+              </Text>
+            )}
+          </View>
+          <View style={styles.itemInfo}>
+            <Text numberOfLines={1} size={15} style={{ fontWeight: '500' }} color={sp.colors.text}>
+              {item.name}
+              {item.alias ? <Text color={sp.colors.textTertiary}> ({item.alias})</Text> : null}
+            </Text>
+            <View style={styles.listItemSingle}>
+              {showSource ? <Badge type="tertiary">{item.source.toUpperCase()}</Badge> : null}
+              {tagInfo.type ? <Badge type={tagInfo.type}>{tagInfo.text}</Badge> : null}
+              {item.meta.fee === 1 ? <Badge type="vip">VIP</Badge> : null}
+              {item.source === 'wy' && item.meta.originCoverType === 2 ? <Badge type="normal">cover</Badge> : null}
+              {historySource ? <Badge type="normal">{historySource}</Badge> : null}
+              <Text
+                style={styles.listItemSingleText}
+                size={12}
+                color={sp.colors.textSecondary}
+                numberOfLines={1}
+              >
+                {singer}
+              </Text>
+            </View>
+          </View>
+          {isShowInterval ? (
+            <Text size={12} color={sp.colors.textSecondary} numberOfLines={1}>
+              {item.interval}
+            </Text>
+          ) : null}
+        </TouchableOpacity>
+
+        {showLikeButton ? (
+          <TouchableOpacity onPress={handleLike} style={styles.likeButton}>
+            <Icon name={isLiked ? "love-filled" : "love"} size={16} color={isLiked ? sp.colors.accent : sp.colors.textTertiary} />
+          </TouchableOpacity>
+        ) : null}
+
+        {hideMenu ? null : (
+          <TouchableOpacity onPress={handleShowMenu} ref={moreButtonRef} style={styles.moreButton}>
+            <Icon name="dots-vertical" style={{ color: sp.colors.textTertiary }} size={12} />
+          </TouchableOpacity>
+        )}
+      </View>
+    )
+  },
+  (prevProps, nextProps) => {
+    return !!(
+      prevProps.onPress === nextProps.onPress &&
+      prevProps.onLongPress === nextProps.onLongPress &&
+      prevProps.onShowMenu === nextProps.onShowMenu &&
+      prevProps.rowInfo === nextProps.rowInfo &&
+      prevProps.item === nextProps.item &&
+      prevProps.index === nextProps.index &&
+      prevProps.showSource === nextProps.showSource &&
+      prevProps.isShowAlbumName === nextProps.isShowAlbumName &&
+      prevProps.isShowInterval === nextProps.isShowInterval &&
+      prevProps.listId === nextProps.listId &&
+      prevProps.playingId === nextProps.playingId &&
+      prevProps.hideMenu === nextProps.hideMenu &&
+      (prevProps.item as any).playHistorySource === (nextProps.item as any).playHistorySource &&
+      nextProps.selectedList.includes(nextProps.item) ==
+      prevProps.selectedList.includes(nextProps.item) &&
+      prevProps.showCover === nextProps.showCover
+    )
+  }
+)
+
+const styles = createStyle({
+  listItem: {
+    flexDirection: 'row',
+    flexWrap: 'nowrap',
+    // spoti.pw 的行：左边距 16，行内不再叠卡片底
+    paddingLeft: 16,
+    paddingRight: 4,
+    alignItems: 'center',
+  },
+  listItemLeft: {
+    flex: 1,
+    flexGrow: 1,
+    flexShrink: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  sn: {
+    // 封面 48 + 与文字的 12 间距，居中对齐
+    width: 48,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  snIndex: {
+    width: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingLeft: 5,
+    paddingRight: 5,
+  },
+  albumArt: {
+    width: 48,
+    height: 48,
+    borderRadius: 6,
+  },
+  itemInfo: {
+    flexGrow: 1,
+    flexShrink: 1,
+    paddingLeft: 12,
+    paddingRight: 2,
+  },
+  listItemSingle: {
+    paddingTop: 2,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  listItemTimeLabel: {
+    marginRight: 5,
+    fontWeight: '400',
+  },
+  listItemSingleText: {
+    flexGrow: 0,
+    flexShrink: 1,
+    fontWeight: '300',
+  },
+  listItemBadge: {
+    paddingLeft: 5,
+    paddingTop: 2,
+    alignSelf: 'flex-start',
+  },
+  listItemRight: {
+    flexGrow: 0,
+    flexShrink: 0,
+    flexBasis: 'auto',
+    justifyContent: 'center',
+  },
+  likeButton: {
+    height: '80%',
+    paddingHorizontal: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  moreButton: {
+    height: '80%',
+    paddingLeft: 10,
+    paddingRight: 16,
+    justifyContent: 'center',
+  },
+})
