@@ -4,7 +4,7 @@
 
 <h1 align="center">奶音 · Milky Music</h1>
 
-<p align="center"><strong>让音乐、歌词与随身设备连在一起的 Android 音乐播放器</strong></p>
+<p align="center"><strong>找到一首歌，校准它的歌词，再把它带到手表上。</strong></p>
 
 <p align="center">
   <a href="https://github.com/zhzipu/milky-music"><img src="https://img.shields.io/badge/version-1.0.0-4c9f70" alt="Version 1.0.0"></a>
@@ -12,71 +12,64 @@
   <a href="https://reactnative.dev/"><img src="https://img.shields.io/badge/React_Native-0.73.11-20232a" alt="React Native 0.73.11"></a>
 </p>
 
-奶音（Milky Music）是一款开源 Android 音乐客户端。它把多音源播放、可精细调整的歌词、桌面控制和手表局域网同步放进同一个播放器；界面覆盖手机、横屏、平板与折叠屏。
+奶音（Milky Music）是一款开源 Android 音乐播放器。它把多音源播放、三引擎听歌识曲、逐首歌词校准、桌面控制和 Wear OS 手表同步串成一套体验；界面适配手机、横屏、平板和折叠屏。
 
-## 核心亮点
+## 奶音的不同之处
 
-### 专注播放体验的界面
+| 体验 | 奶音怎么做 |
+| --- | --- |
+| 听到一首歌，想知道它叫什么 | Shazam、网易云 AFP 和酷狗三引擎并行识别，结果合并后即时显示 |
+| 歌词总是早半拍或晚半拍 | 拖动歌词直接对齐；也可单独匹配歌词、调整偏移与歌词倍速 |
+| 想在手表上继续听手机歌单 | 选择歌单、曲目和音质；手表在同一 Wi-Fi 下按需向手机取歌，不经云端音乐服务器 |
+| 不打开 App 也想看歌词、切歌 | 桌面歌词和主屏幕小组件显示当前播放信息，并提供播放控制 |
+| 在平板或折叠屏上播放 | 横屏和大屏采用专门布局，播放控件与导航使用玻璃质感视觉 |
 
-深色外观搭配半透明玻璃质感导航和播放控件。播放页提供歌词、封面和动态音频效果；横屏、平板与折叠屏采用适配的大屏布局。
+## 音源与识曲
 
-### 多音源与 B 站音乐
+网易云、酷狗和 B 站音频都可在 App 内搜索与播放。B 站作为独立音源，提供分区排行榜、评论、UP 主作品与合集、收藏及视频详情跳转。
 
-在一个界面中搜索和播放网易云、酷狗及 B 站音频。B 站音源还支持分区排行榜、评论、UP 主作品与合集、收藏和视频详情跳转。各音源的内容和可用性由对应的第三方服务决定。
+听歌识曲由三个引擎并行处理。Shazam 指纹和网易云 AFP 指纹在设备本地计算；查询结果仍需联网。酷狗识曲会将录到的音频发送给酷狗服务。整套识曲不需要自建服务器。
 
-### 把歌词调到刚刚好
+```mermaid
+flowchart LR
+  services[网易云 / 酷狗 / B 站] <--> app[奶音 · Android]
+  app -->|同一 Wi-Fi：已选曲目、按需音频、歌词| watch[LXXWear · Wear OS]
+```
 
-- 自动匹配不合适时，可按歌名和歌手搜索歌词，并为单首歌曲保存匹配结果。
-- 可拖动歌词对齐时间，也可分别调整整体偏移和歌词倍速，不改变音频速度。
-- 同一条歌词时间轴用于播放器、桌面歌词、小组件和已同步到手表的歌词。
+## 歌词与手表
 
-### 手机与 Wear OS 手表直连
+自动匹配不准时，可按歌名和歌手为单首歌曲重新匹配。歌词支持拖动对齐、整体时间偏移和歌词倍速；这些调整只改变歌词时间轴，不改变音乐速度。
 
-配套应用 [LXXWear](https://github.com/zhzipu/LXXWear) 可在同一 Wi-Fi 下获取手机歌单、音频和歌词。选择要同步的歌单与曲目后，手表按需取歌；手机与手表直接通信，不经过云端音乐服务器。
+配套手表应用 [LXXWear](https://github.com/zhzipu/LXXWear) 与手机连接同一 Wi-Fi 后即可配对。手机提供本地同步服务，手表只请求已选曲目，并按需接收音频和歌词，不依赖云端中转。手机上的歌词校准也会沿用到手表。
 
-### 主屏幕也能控制音乐
+## 桌面与大屏
 
-桌面小组件显示专辑封面、歌曲信息、当前歌词、进度和播放控制。提供跟随界面配色、透明、固定深色与固定浅色等样式；桌面歌词也会随播放时间推进。
+- **主屏幕小组件**：显示封面、歌曲信息、当前歌词、进度及播放控制；提供常规、透明、随应用外观、固定深色和固定浅色样式。
+- **桌面歌词**：歌词随播放时间推进，并支持悬浮显示。
+- **播放器界面**：深色外观、半透明玻璃质感导航与控件，以及随音乐变化的音频波形。
+- **大屏适配**：横屏、平板与折叠屏使用专门布局，不只是拉伸手机界面。
 
-### 三种听歌识曲引擎
+## 构建
 
-网易云、酷狗与 Shazam 并行识别并合并结果。Shazam 指纹在设备本地计算，网易云 AFP 指纹也在设备上的 WebView 中计算；识曲流程不需要自建服务端。部分识曲请求仍会连接对应的第三方服务。
-
-### 歌单、历史与备份
-
-支持播放历史、相似歌手与歌曲、完整数据备份，以及 OneDrive 远程播放。
-
-## 开始使用
-
-目前仓库提供源码，未附带预编译 APK。构建环境需要 Node.js 18 或更高版本、JDK 17 和 Android SDK。
+目前仓库提供源码，未附带预编译 APK。需要 Node.js 18 或更高版本、JDK 17 和 Android SDK。
 
 ```bash
 npm ci
 npm run bundle-android
-```
-
-在 Windows PowerShell 中编译：
-
-```powershell
-cd android
-.\gradlew.bat assembleDebug
-```
-
-在 macOS 或 Linux 中编译：
-
-```bash
 cd android
 ./gradlew assembleDebug
 ```
 
-Debug APK 输出到 `android/app/build/outputs/apk/debug/`。正式构建需要自行配置 Android 签名材料；请勿将密钥或 `keystore.properties` 提交到仓库。正式包名为 `OMG.Milky.Music`，Debug 包名为 `OMG.Milky.Music.dev`。
+Windows PowerShell 中将最后一行替换为：
 
-## 项目来源
+```powershell
+.\gradlew.bat assembleDebug
+```
+
+Debug APK 输出到 `android/app/build/outputs/apk/debug/`。正式包名为 `OMG.Milky.Music`，Debug 包名为 `OMG.Milky.Music.dev`。发布构建需自行配置签名材料；不要把密钥或 `keystore.properties` 提交到仓库。
+
+## 项目来源与许可
 
 本项目基于 [lx-music-mobile](https://github.com/lyswhut/lx-music-mobile) 继续开发，感谢上游作者的开源贡献。完整更新记录见 [CHANGELOG.md](./CHANGELOG.md)，常见问题见 [FAQ.md](./FAQ.md)。
 
-音乐内容由第三方服务提供。使用各音源前，请遵守其服务条款及所在地法律法规。
-
-## 许可证
-
-项目主体采用 [Apache License 2.0](./LICENSE)。`android/app/src/main/assets/afp/` 中的 AFP 指纹实现来自 [ncm-afp](https://github.com/mos9527/ncm-afp)，采用 MIT License。
+音乐内容由第三方服务提供，其内容与可用性受对应服务条款和所在地法律法规约束。项目主体采用 [Apache License 2.0](./LICENSE)。`android/app/src/main/assets/afp/` 中的 AFP 指纹实现来自 [ncm-afp](https://github.com/mos9527/ncm-afp)，采用 MIT License。
