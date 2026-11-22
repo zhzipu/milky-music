@@ -12,7 +12,7 @@ export default memo(() => {
   const theme = useTheme()
   const t = useI18n()
   const openHomePage = () => {
-    void openUrl('https://github.com/zhzipu/milky-music#readme')
+    void openUrl('https://github.com/zhzipu/milky-music')
   }
 
   const textLinkStyle = {
