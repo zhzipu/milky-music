@@ -1,7 +1,3 @@
-> [!IMPORTANT]
-> **项目迁移说明：原 [LX-N-X-Music](https://github.com/zhzipu/LX-N-X-Music) 已废弃并停止维护，现已迁移至本仓库 [奶音 Milky Music（milky-music）](https://github.com/zhzipu/milky-music)。**
-> 本仓库为后续维护与发布入口。请在此查看文档、[下载新版本](https://github.com/zhzipu/milky-music/releases)及[反馈问题](https://github.com/zhzipu/milky-music/issues)；旧仓库仅保留历史资料。
-
 <p align="center">
   <img src="./doc/images/icon.png" width="144" alt="奶音 Milky Music 图标">
 </p>
