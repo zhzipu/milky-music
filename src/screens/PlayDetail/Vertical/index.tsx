@@ -15,8 +15,11 @@ import { createStyle } from '@/utils/tools'
 import { useTheme } from '@/store/theme/hook'
 import { MS_MOTION } from '@/theme/myspotify/tokens'
 import PageScrim from '@/components/spotify/PageScrim'
-import { usePlayMusicInfo } from '@/store/player/hook'
+import { usePlayMusicInfo, usePlayerMusicInfo } from '@/store/player/hook'
 import { foldPage } from '@/navigation/foldPage'
+import { getImageHeaders, normalizeImageUri } from '@/components/common/Image'
+
+const idlePlayerCover = require('@/resources/images/milky-music-icon.png')
 
 const LyricPage = ({ activeIndex }: { activeIndex: number }) => {
   const initedRef = useRef(false)
@@ -40,8 +43,9 @@ export default memo(({ componentId, initialPage }: { componentId: string, initia
   const pageOpacity = useRef(new Animated.Value(0)).current
   const theme = useTheme()
   const playMusicInfo = usePlayMusicInfo()
-  // spoti.pw 的播放页背景：整屏铺当前封面、重度模糊，再压一层暗色
-  const backdropUrl = (playMusicInfo.musicInfo as LX.Music.MusicInfo | undefined)?.meta?.picUrl
+  const playerMusicInfo = usePlayerMusicInfo()
+  const [failedBackdropUrl, setFailedBackdropUrl] = useState<string | null>(null)
+  const backdropUrl = playerMusicInfo.pic || (playMusicInfo.musicInfo as LX.Music.MusicInfo | undefined)?.meta?.picUrl
 
   const onPageSelected = ({ nativeEvent }: PagerViewOnPageSelectedEvent) => {
     setPageIndex(nativeEvent.position)
@@ -101,19 +105,19 @@ export default memo(({ componentId, initialPage }: { componentId: string, initia
   return (
     <Animated.View style={[styles.page, { opacity: pageOpacity }]}>
       {/* 整屏虚化封面：spoti.pw 的 now-playing 背景就是封面本身，模糊后压暗 */}
-      {backdropUrl
-        ? (
-            <View style={styles.backdrop} pointerEvents="none">
-              <RNImage
-                source={{ uri: backdropUrl }}
-                style={StyleSheet.absoluteFill}
-                resizeMode="cover"
-                blurRadius={36}
-              />
-              <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0, 0, 0, 0.55)' }]} />
-            </View>
-          )
-        : null}
+      <View style={styles.backdrop} pointerEvents="none">
+        <RNImage
+          source={backdropUrl && backdropUrl !== failedBackdropUrl
+            ? { uri: normalizeImageUri(backdropUrl), headers: getImageHeaders(backdropUrl) }
+            : idlePlayerCover}
+          defaultSource={idlePlayerCover}
+          style={StyleSheet.absoluteFill}
+          resizeMode="cover"
+          blurRadius={36}
+          onError={() => { if (backdropUrl) setFailedBackdropUrl(backdropUrl) }}
+        />
+        <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0, 0, 0, 0.55)' }]} />
+      </View>
       <PageScrim />
       <Header />
       <View style={styles.container}>

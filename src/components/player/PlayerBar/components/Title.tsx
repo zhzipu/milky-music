@@ -24,7 +24,6 @@ export default ({ isHome, onLayout }: { isHome: boolean, onLayout: (event: Layou
       longPressedRef.current = false
       return
     }
-    if (!musicInfo.id) return
     navigations.pushPlayDetailScreen(commonState.componentIds[commonState.componentIds.length - 1]?.id!)
   }
 

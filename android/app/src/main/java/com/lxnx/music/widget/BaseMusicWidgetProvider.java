@@ -221,10 +221,12 @@ public abstract class BaseMusicWidgetProvider extends AppWidgetProvider {
     /**
      * 歌词行更新：用 full update 确保 widget 真正刷新（partial update 在部分 launcher 不可靠）。
      * 复用 updateSingleWidget 逻辑：设置 title/按钮/intent/最新歌词，artwork 通过 url 去重避免重复加载。
-     * 节流：避免高频 onPlay 导致 full update 风暴（最低 200ms 一次）。
+     * 节流并合并中间更新：避免 full update 风暴，同时保证最终显示最新歌词。
      */
     private static long lastLyricUpdateMs = 0;
     private static final long LYRIC_THROTTLE_MS = 200;
+    private static String pendingLyric;
+    private static Runnable pendingLyricUpdate;
 
     private void updateLyric(Context context, String lyric) {
         if (lyric == null) return;
@@ -236,10 +238,27 @@ public abstract class BaseMusicWidgetProvider extends AppWidgetProvider {
         }
         if (total == 0) return;
 
-        // 节流
         long now = System.currentTimeMillis();
-        if (now - lastLyricUpdateMs < LYRIC_THROTTLE_MS) return;
-        lastLyricUpdateMs = now;
+        long delay = LYRIC_THROTTLE_MS - (now - lastLyricUpdateMs);
+        if (delay > 0) {
+            pendingLyric = lyric;
+            if (pendingLyricUpdate != null) mainHandler.removeCallbacks(pendingLyricUpdate);
+            pendingLyricUpdate = () -> {
+                String latestLyric = pendingLyric;
+                pendingLyric = null;
+                pendingLyricUpdate = null;
+                if (latestLyric != null) applyLyricUpdate(context, latestLyric);
+            };
+            mainHandler.postDelayed(pendingLyricUpdate, delay);
+            return;
+        }
+
+        applyLyricUpdate(context, lyric);
+    }
+
+    private void applyLyricUpdate(Context context, String lyric) {
+        lastLyricUpdateMs = System.currentTimeMillis();
+        AppWidgetManager manager = AppWidgetManager.getInstance(context);
 
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         // 持久化最新歌词（重建 RemoteViews 时 updateSingleWidget 会从 prefs 读取显示）

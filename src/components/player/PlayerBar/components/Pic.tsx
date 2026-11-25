@@ -31,7 +31,6 @@ export default ({ isHome }: { isHome: boolean }) => {
       longPressedRef.current = false
       return
     }
-    if (!musicInfo.id) return
     navigations.pushPlayDetailScreen(commonState.componentIds[commonState.componentIds.length - 1]?.id!)
   }
 

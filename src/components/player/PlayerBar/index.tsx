@@ -11,7 +11,6 @@ import { useTheme } from '@/store/theme/hook'
 import { Icon } from '@/components/common/Icon'
 import { navigations } from '@/navigation'
 import commonState from '@/store/common/state'
-import { usePlayerMusicInfo } from '@/store/player/hook'
 import PlayerPlaylist, { PlayerPlaylistType } from '@/components/player/PlayerPlaylist.tsx'
 import playerState from '@/store/player/state'
 import { LIST_IDS } from '@/config/constant'
@@ -35,7 +34,6 @@ const MENU_TAP_AREA = MS_SIZE.playerBarIconLarge + MS_SIZE.playerBarIconGap
 export default memo(({ componentId, isHome = false, hideAudioWave = false, autoHideOnScroll = false }: { componentId: string, isHome?: boolean, hideAudioWave?: boolean, autoHideOnScroll?: boolean }) => {
   const { keyboardShown } = useKeyboard()
   const theme = useTheme()
-  const musicInfo = usePlayerMusicInfo()
   const longPressedRef = useRef(false)
   const playlistRef = useRef<PlayerPlaylistType>(null)
   const [titleBottom, setTitleBottom] = useState<number | null>(null)
@@ -61,7 +59,6 @@ export default memo(({ componentId, isHome = false, hideAudioWave = false, autoH
       longPressedRef.current = false
       return
     }
-    if (!musicInfo.id) return
     const currentComponentId = commonState.componentIds[commonState.componentIds.length - 1]?.id!
     navigations.pushPlayDetailScreen(currentComponentId)
   }
@@ -160,7 +157,7 @@ export default memo(({ componentId, isHome = false, hideAudioWave = false, autoH
       </Animated.View>
     ),
     [containerStyle, pressScaleStyle, glowStyle, springPress, theme, isHome, handleShowPlaylist, panResponder.panHandlers,
-      componentId, track, titleBottom, onTitleLayout, onTrackLayout, musicInfo.id, hideAudioWave, autoHideOnScroll, bottomMotion.translateY],
+      componentId, track, titleBottom, onTitleLayout, onTrackLayout, hideAudioWave, autoHideOnScroll, bottomMotion.translateY],
   )
 
   return (

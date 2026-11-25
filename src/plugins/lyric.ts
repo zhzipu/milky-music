@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import Lyric, { type Lines } from 'lrc-file-parser'
 // import { getStore, subscribe } from '@/store'
-import { updateLyric as updateWidgetLyric } from '@/utils/nativeModules/musicWidget'
 export type Line = Lines[number]
 type PlayHook = (line: number, text: string) => void
 type SetLyricHook = (lines: Lines) => void
@@ -65,8 +64,6 @@ const lrcTools = {
     // console.log(line)
     this.currentLineData.text = text
     for (const hook of this.playHooks) hook(line, text)
-    // 推送当前歌词行到桌面小组件，触发向上滚动动画
-    void updateWidgetLyric(text).catch(() => {})
   },
   onSetLyric(lines: Lines) {
     this.currentLines = lines
@@ -74,8 +71,6 @@ const lrcTools = {
     this.currentLineData.text = ''
     for (const hook of this.playHooks) hook(-1, '')
     for (const hook of this.setLyricHooks) hook(lines)
-    // 歌词重置（切歌或清空）时，同步清空桌面小组件歌词区
-    void updateWidgetLyric('').catch(() => {})
   },
   addPlayHook(hook: PlayHook) {
     this.playHooks.push(hook)
