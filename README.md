@@ -16,7 +16,7 @@
 
 > **音乐资源声明：本项目不提供任何音乐资源文件或自有曲库。应用播放的在线音频由所选第三方音源提供；项目不核验这些资源的合法性、版权归属或授权状态，也不对其承担责任。使用者须自行确认拥有合法使用权限。**
 
-本项目基于 [lx-music-mobile](https://github.com/lyswhut/lx-music-mobile) 继续开发，首个奶音版本为 **1.0.0**。
+本项目基于 [lx-music-mobile](https://github.com/lyswhut/lx-music-mobile) 继续开发。
 
 ## 内容导航
 
